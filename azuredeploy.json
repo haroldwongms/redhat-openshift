@@ -328,7 +328,7 @@
         "sqlPublicIPdnsPrefix": "[concat(parameters('sqlPublicIPdnsPrefix'),uniqueString(resourceGroup().id))]",
         "storageAccType": "Standard_LRS",
         "storageAccountResourceUrl": "[concat(parameters('armBaseUrl'),'staging/storage/storage.json?token=AT3pTezMIHt79xp0tyD9_3-UtdQewCxtks5X5PAzwA%3D%3D')]",
-        "sqlNetworkSecurityGroupResourceUrl": "[concat(parameters('armComponentUrl'),'sqlserver-redhat/sqlserver-redhat/sqlserver/nested/sqlserver-nsg.json?token=AT3pTeE1EcMSsJo8o3evkXEIenvyxPNiks5X5P0RwA%3D%3D')]",
+        "sqlNetworkSecurityGroupResourceUrl": "https://raw.githubusercontent.com/sysgain/redhat-openshift/master/sqlserver/nested/sqlserver-nsg.json",
         "sqlNetworkInterfacesResourceUrl": "[concat(parameters('armBaseUrl'),'staging/network-interface/network-interface.json?token=AT3pTep_XdJObVnePA2vUcfXKBb_M5ciks5X5QKAwA%3D%3D')]",
         "sqlVirtualMachineResourceUrl": "[concat(parameters('armBaseUrl'),'staging/virtual-machine/vm-withoutplan-with-1disk.json?token=AT3pTQih33ViOJoARuCEoz9wEEnpSkMOks5X5Q63wA%3D%3D')]",
         "sqlPublicIPResourceUrl": "[concat(parameters('armBaseUrl'),'staging/public-ip/public-ip.json?token=AT3pTTHPK6WMMjUL-_9lrUXDtSk_mvLqks5X5PkGwA%3D%3D')]",
