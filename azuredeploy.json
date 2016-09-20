@@ -62,10 +62,6 @@
             "type": "string",
             "defaultValue": "https://raw.githubusercontent.com/sysgain/arm-base/"
         },
-        "armComponentUrl": {
-            "type": "string",
-            "defaultValue": "https://raw.githubusercontent.com/sysgain/arm-components/"
-        },
         "baseUrl": {
             "type": "string",
             "metadata": {
