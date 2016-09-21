@@ -30,7 +30,7 @@ sed -i -e "s/^# control_path = %(directory)s\/%%h-%%r/control_path = %(directory
 sed -i -e "s/^#host_key_checking = False/host_key_checking = False/" /etc/ansible/ansible.cfg
 sed -i -e "s/^#pty=False/pty=False/" /etc/ansible/ansible.cfg
 
-# Create Ansible Hosts  File
+# Create Ansible Hosts File
 echo $(date) " - Create Ansible Hosts file"
 
 cat > /etc/ansible/hosts <<EOF
