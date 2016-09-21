@@ -72,7 +72,7 @@
 		}
 	},
 	"variables": {
-		"openshiftDeploymentScriptUrl": "[concat(parameters('baseUrl'), 'redhat/scripts/deployOpenShift.sh')]",
+		"openshiftDeploymentScriptUrl": "https://raw.githubusercontent.com/sysgain/redhat-openshift/master/redhat/scripts/deployOpenShift.sh",
 		"openshiftDeploymentScriptFileName": "deployOpenShift.sh"
 	},
 	"resources": [{
