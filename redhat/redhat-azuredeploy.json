@@ -2,6 +2,28 @@
 	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
 	"contentVersion": "1.0.0.0",
 	"parameters": {
+		"location": {
+            "type": "string",
+            "defaultValue": "West US",
+            "allowedValues": [
+                "Brazil South",
+                "East Asia",
+                "East US",
+                "Japan East",
+                "Japan West",
+                "North Central US",
+                "North Europe",
+                "South Central US",
+                "West Europe",
+                "West US",
+                "Southeast Asia",
+                "Central US",
+                "East US 2"
+            ],
+            "metadata": {
+                "description": "The location where the solution will be deployed."
+            }
+        },
 		"baseUrl": {
 			"type": "string",
 			"defaultValue": "https://raw.githubusercontent.com/sysgain/redhat-openshift/master/"
@@ -160,7 +182,6 @@
 		}
 	},
 	"variables": {
-		"location": "[resourceGroup().location]",
 		"apiVersionCompute": "2015-06-15",
 		"apiVersionNetwork": "2015-06-15",
 		"apiVersionStorage": "2015-06-15",
@@ -372,7 +393,7 @@
 			"apiVersion": "[variables('apiVersionNetwork')]",
 			"type": "Microsoft.Network/networkSecurityGroups",
 			"name": "[concat(parameters('openshiftMasterHostname'), '-nsg')]",
-			"location": "[variables('location')]",
+			"location": "[parameters('location')]",
 			"properties": {
 				"securityRules": [{
 					"name": "allowSSHin_all",
@@ -418,7 +439,7 @@
 		}, {
 			"type": "Microsoft.Network/virtualNetworks",
 			"name": "[variables('virtualNetworkName')]",
-			"location": "[variables('location')]",
+			"location": "[parameters('location')]",
 			"apiVersion": "[variables('apiVersionNetwork')]",
 			"tags": {
 				"displayName": "VirtualNetwork"
@@ -444,7 +465,7 @@
 		}, {
 			"type": "Microsoft.Storage/storageAccounts",
 			"name": "[variables('newStorageAccountMaster')]",
-			"location": "[variables('location')]",
+			"location": "[parameters('location')]",
 			"apiVersion": "[variables('apiVersionStorage')]",
 			"tags": {
 				"displayName": "StorageAccounts"
@@ -455,7 +476,7 @@
 		}, {
 			"type": "Microsoft.Storage/storageAccounts",
 			"name": "[variables('newStorageAccountNode')]",
-			"location": "[variables('location')]",
+			"location": "[parameters('location')]",
 			"apiVersion": "[variables('apiVersionStorage')]",
 			"tags": {
 				"displayName": "StorageAccounts"
@@ -466,7 +487,7 @@
 		}, {
 			"type": "Microsoft.Network/publicIPAddresses",
 			"name": "[parameters('nodeLbPublicIpDnsLabelPrefix')]",
-			"location": "[variables('location')]",
+			"location": "[parameters('location')]",
 			"apiVersion": "[variables('apiVersionNetwork')]",
 			"tags": {
 				"displayName": "OpenShiftNodeLBPublicIP"
@@ -480,13 +501,13 @@
 		}, {
 			"type": "Microsoft.Compute/availabilitySets",
 			"name": "nodes",
-			"location": "[variables('location')]",
+			"location": "[parameters('location')]",
 			"apiVersion": "[variables('apiVersionCompute')]",
 			"properties": {}
 		}, {
 			"type": "Microsoft.Network/loadBalancers",
 			"name": "[variables('nodeLoadBalancerName')]",
-			"location": "[variables('location')]",
+			"location": "[parameters('location')]",
 			"apiVersion": "[variables('apiVersionNetwork')]",
 			"tags": {
 				"displayName": "OpenShiftNodeLB"
@@ -560,7 +581,7 @@
 		}, {
 			"type": "Microsoft.Network/loadBalancers/inboundNatRules",
 			"name": "[concat(variables('nodeLoadBalancerName'), '/', 'SSH-', variables('namingInfix'), '-', copyIndex())]",
-			"location": "[variables('location')]",
+			"location": "[parameters('location')]",
 			"apiVersion": "[variables('apiVersionNetwork')]",
 			"tags": {
 				"displayName": "inboundNatRules"
@@ -586,7 +607,7 @@
 		{
 			"type": "Microsoft.Network/publicIPAddresses",
 			"name": "[parameters('openshiftMasterPublicIpDnsLabelPrefix')]",
-			"location": "[variables('location')]",
+			"location": "[parameters('location')]",
 			"apiVersion": "[variables('apiVersionNetwork')]",
 			"tags": {
 				"displayName": "OpenShiftMasterPublicIP"
@@ -600,7 +621,7 @@
 		}, {
 			"type": "Microsoft.Network/networkInterfaces",
 			"name": "[concat(parameters('openshiftMasterHostname'), 'nic')]",
-			"location": "[variables('location')]",
+			"location": "[parameters('location')]",
 			"apiVersion": "[variables('apiVersionNetwork')]",
 			"tags": {
 				"displayName": "OpenShiftMasterNetworkInterface"
@@ -629,7 +650,7 @@
 		}, {
 			"type": "Microsoft.Compute/virtualMachines",
 			"name": "[parameters('openshiftMasterHostname')]",
-			"location": "[variables('location')]",
+			"location": "[parameters('location')]",
 			"apiVersion": "[variables('apiVersionCompute')]",
 			"tags": {
 				"displayName": "OpenShiftMasterVirtualMachine"
@@ -684,7 +705,7 @@
 		}, {
 			"type": "Microsoft.Compute/virtualMachines/extensions",
 			"name": "[concat(parameters('openshiftMasterHostname'), '/deployOpenShift')]",
-			"location": "[variables('location')]",
+			"location": "[parameters('location')]",
 			"apiVersion": "[variables('apiVersionCompute')]",
 			"tags": {
 				"displayName": "PrepMaster"
@@ -709,7 +730,7 @@
 		}, {
 			"type": "Microsoft.Network/networkInterfaces",
 			"name": "[concat(variables('namingInfix'), copyIndex(), 'nic')]",
-			"location": "[variables('location')]",
+			"location": "[parameters('location')]",
 			"apiVersion": "[variables('apiVersionNetwork')]",
 			"tags": {
 				"displayName": "OpenShiftNodeNetworkInterfaces"
@@ -742,7 +763,7 @@
 		}, {
 			"type": "Microsoft.Compute/virtualMachines",
 			"name": "[concat(variables('namingInfix'), '-', copyIndex())]",
-			"location": "[variables('location')]",
+			"location": "[parameters('location')]",
 			"apiVersion": "[variables('apiVersionCompute')]",
 			"tags": {
 				"displayName": "OpenShiftNodes"
@@ -804,7 +825,7 @@
 		}, {
 			"type": "Microsoft.Compute/virtualMachines/extensions",
 			"name": "[concat(variables('namingInfix'), '-', copyIndex(), '/prepNodes')]",
-			"location": "[variables('location')]",
+			"location": "[parameters('location')]",
 			"apiVersion": "[variables('apiVersionCompute')]",
 			"tags": {
 				"displayName": "PrepNodes"
