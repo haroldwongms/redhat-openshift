@@ -52,7 +52,7 @@ echo "DEVS=/dev/sdc" >> /etc/sysconfig/docker-storage-setup
 echo "VG=docker-vg" >> /etc/sysconfig/docker-storage-setup
 docker-storage-setup
 
-# Enable and start Docker services
+# Enable and start Docker  services
 
 systemctl enable docker
 systemctl start docker
