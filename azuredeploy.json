@@ -40,7 +40,6 @@
         },
         "StorageAccountName": {
             "type": "string",
-            "defaultValue": "",
             "metadata": {
                 "description": "Unique DNS Name for the Storage Account where the Virtual Machine's disks will be placed."
             }
@@ -61,7 +60,6 @@
         "baseUrl": {
             "type": "string",
             "defaultValue": "https://raw.githubusercontent.com/sysgain/redhat-openshift/master/"
-            
         },
         "masterVmSize": {
             "type": "string",
@@ -177,7 +175,7 @@
         },
         "openshiftMasterHostname": {
             "type": "string",
-            "defaultValue":"openshiftvm",
+            "defaultValue": "openshiftvm",
             "minLength": 1,
             "metadata": {
                 "description": "OpenShift Master hostname"
@@ -186,14 +184,14 @@
         "openshiftMasterPublicIpDnsLabelPrefix": {
             "type": "string",
             "minLength": 1,
-            "defaultValue":"openshiftpip",
+            "defaultValue": "openshiftpip",
             "metadata": {
                 "description": "OpenShift Master VM public IP DNS name. Must be lowercase. It should match with the following regular expression: ^[a-z][a-z0-9-]{1,61}[a-z0-9]$ or it will raise an error."
             }
         },
         "nodeLbPublicIpDnsLabelPrefix": {
             "type": "string",
-            "defaultValue":"usernodepip",
+            "defaultValue": "usernodepip",
             "minLength": 1,
             "metadata": {
                 "description": "OpenShift Nodes Load Balancer public IP DNS name. Must be lowercase. It should match with the following regular expression: ^[a-z][a-z0-9-]{1,61}[a-z0-9]$ or it will raise an error."
@@ -202,7 +200,7 @@
         "nodePrefix": {
             "type": "string",
             "minLength": 1,
-            "defaultValue":"usernode",
+            "defaultValue": "usernode",
             "metadata": {
                 "description": "OpenShift Node VM prefix"
             }
@@ -229,7 +227,6 @@
         "adminUsername": {
             "type": "string",
             "minLength": 1,
-            "defaultValue":"s",
             "metadata": {
                 "description": "Administrator username on all VMs"
             }
@@ -244,7 +241,7 @@
         "cloudAccessUsername": {
             "type": "string",
             "minLength": 1,
-            "defaultValue":"",
+            "defaultValue": "",
             "metadata": {
                 "description": "Cloud Access Username"
             }
@@ -259,7 +256,7 @@
         "cloudAccessPoolId": {
             "type": "string",
             "minLength": 1,
-            "defaultValue":"",
+            "defaultValue": "",
             "metadata": {
                 "description": "Pool ID with RHEL and OpenShift entitlements"
             }
@@ -286,7 +283,7 @@
         },
         "keyVaultName": {
             "type": "string",
-            "minLength": 1,  
+            "minLength": 1,
             "metadata": {
                 "description": "Name of the Key Vault"
             }
@@ -300,7 +297,7 @@
         },
         "defaultSubDomain": {
             "type": "string",
-            "defaultValue":"defdom",
+            "defaultValue": "defdom",
             "minLength": 1,
             "metadata": {
                 "description": "Default Subdomain for application routing (Wildcard DNS)"
@@ -308,6 +305,8 @@
         }
     },
     "variables": {
+        "commandToExecute1": "[concat('sh ', variables('masterPrepScriptFileName'), ' ', parameters('cloudAccessUsername'), ' ', parameters('cloudAccessPassword'), ' ', parameters('cloudAccessPoolId'))]",
+        "commandToExecute2": "[concat('sh ', variables('nodePrepScriptFileName'), ' ', parameters('cloudAccessUsername'), ' ', parameters('cloudAccessPassword'), ' ', parameters('cloudAccessPoolId'))]",
         "sqlImagePublisher": "MicrosoftSQLServer",
         "sqlImageOffer": "SQL2016-WS2012R2",
         "sqlImageSku": "Standard",
@@ -332,10 +331,6 @@
         "storageApiVersion": "2015-06-15",
         "networkApiVersion": "2015-06-15",
         "computeApiVersion": "2015-06-15",
-        "apiVersionCompute": "2015-06-15",
-        "apiVersionNetwork": "2015-06-15",
-        "apiVersionStorage": "2015-06-15",
-        "apiVersionLinkTemplate": "2015-01-01",
         "storageAccountType": "Standard_LRS",
         "namingInfix": "[toLower(parameters('nodePrefix'))]",
         "newStorageAccountMaster": "[concat(uniqueString(concat(resourceGroup().id, 'msa', '0')), 'msa')]",
@@ -742,7 +737,7 @@
             }
         },
         {
-            "apiVersion": "[variables('apiVersionNetwork')]",
+            "apiVersion": "[variables('networkApiVersion')]",
             "type": "Microsoft.Network/networkSecurityGroups",
             "name": "[concat(parameters('openshiftMasterHostname'), '-nsg')]",
             "location": "[parameters('location')]",
@@ -797,7 +792,7 @@
             "type": "Microsoft.Network/virtualNetworks",
             "name": "[variables('virtualNetworkName')]",
             "location": "[parameters('location')]",
-            "apiVersion": "[variables('apiVersionNetwork')]",
+            "apiVersion": "[variables('networkApiVersion')]",
             "tags": {
                 "displayName": "VirtualNetwork"
             },
@@ -833,7 +828,7 @@
             "type": "Microsoft.Storage/storageAccounts",
             "name": "[variables('newStorageAccountMaster')]",
             "location": "[parameters('location')]",
-            "apiVersion": "[variables('apiVersionStorage')]",
+            "apiVersion": "[variables('storageApiVersion')]",
             "tags": {
                 "displayName": "StorageAccounts"
             },
@@ -845,7 +840,7 @@
             "type": "Microsoft.Storage/storageAccounts",
             "name": "[variables('newStorageAccountNode')]",
             "location": "[parameters('location')]",
-            "apiVersion": "[variables('apiVersionStorage')]",
+            "apiVersion": "[variables('storageApiVersion')]",
             "tags": {
                 "displayName": "StorageAccounts"
             },
@@ -857,7 +852,7 @@
             "type": "Microsoft.Network/publicIPAddresses",
             "name": "[parameters('nodeLbPublicIpDnsLabelPrefix')]",
             "location": "[parameters('location')]",
-            "apiVersion": "[variables('apiVersionNetwork')]",
+            "apiVersion": "[variables('networkApiVersion')]",
             "tags": {
                 "displayName": "OpenShiftNodeLBPublicIP"
             },
@@ -872,14 +867,14 @@
             "type": "Microsoft.Compute/availabilitySets",
             "name": "nodes",
             "location": "[parameters('location')]",
-            "apiVersion": "[variables('apiVersionCompute')]",
+            "apiVersion": "[variables('computeApiVersion')]",
             "properties": {}
         },
         {
             "type": "Microsoft.Network/loadBalancers",
             "name": "[variables('nodeLoadBalancerName')]",
             "location": "[parameters('location')]",
-            "apiVersion": "[variables('apiVersionNetwork')]",
+            "apiVersion": "[variables('networkApiVersion')]",
             "tags": {
                 "displayName": "OpenShiftNodeLB"
             },
@@ -964,7 +959,7 @@
             "type": "Microsoft.Network/loadBalancers/inboundNatRules",
             "name": "[concat(variables('nodeLoadBalancerName'), '/', 'SSH-', variables('namingInfix'), '-', copyIndex())]",
             "location": "[parameters('location')]",
-            "apiVersion": "[variables('apiVersionNetwork')]",
+            "apiVersion": "[variables('networkApiVersion')]",
             "tags": {
                 "displayName": "inboundNatRules"
             },
@@ -989,7 +984,7 @@
             "type": "Microsoft.Network/publicIPAddresses",
             "name": "[parameters('openshiftMasterPublicIpDnsLabelPrefix')]",
             "location": "[parameters('location')]",
-            "apiVersion": "[variables('apiVersionNetwork')]",
+            "apiVersion": "[variables('networkApiVersion')]",
             "tags": {
                 "displayName": "OpenShiftMasterPublicIP"
             },
@@ -1004,7 +999,7 @@
             "type": "Microsoft.Network/networkInterfaces",
             "name": "[concat(parameters('openshiftMasterHostname'), 'nic')]",
             "location": "[parameters('location')]",
-            "apiVersion": "[variables('apiVersionNetwork')]",
+            "apiVersion": "[variables('networkApiVersion')]",
             "tags": {
                 "displayName": "OpenShiftMasterNetworkInterface"
             },
@@ -1035,7 +1030,7 @@
             "type": "Microsoft.Compute/virtualMachines",
             "name": "[parameters('openshiftMasterHostname')]",
             "location": "[parameters('location')]",
-            "apiVersion": "[variables('apiVersionCompute')]",
+            "apiVersion": "[variables('computeApiVersion')]",
             "tags": {
                 "displayName": "OpenShiftMasterVirtualMachine"
             },
@@ -1097,7 +1092,7 @@
             "type": "Microsoft.Compute/virtualMachines/extensions",
             "name": "[concat(parameters('openshiftMasterHostname'), '/deployOpenShift')]",
             "location": "[parameters('location')]",
-            "apiVersion": "[variables('apiVersionCompute')]",
+            "apiVersion": "[variables('computeApiVersion')]",
             "tags": {
                 "displayName": "PrepMaster"
             },
@@ -1115,7 +1110,7 @@
                     ]
                 },
                 "protectedSettings": {
-                    "commandToExecute": "[concat('sh ', variables('masterPrepScriptFileName'), ' ', parameters('cloudAccessUsername'), ' ', parameters('cloudAccessPassword'), ' ', parameters('cloudAccessPoolId'))]"
+                    "commandToExecute": "[variables('commandToExecute1')]"
                 }
             }
         },
@@ -1123,7 +1118,7 @@
             "type": "Microsoft.Network/networkInterfaces",
             "name": "[concat(variables('namingInfix'), copyIndex(), 'nic')]",
             "location": "[parameters('location')]",
-            "apiVersion": "[variables('apiVersionNetwork')]",
+            "apiVersion": "[variables('networkApiVersion')]",
             "tags": {
                 "displayName": "OpenShiftNodeNetworkInterfaces"
             },
@@ -1163,7 +1158,7 @@
             "type": "Microsoft.Compute/virtualMachines",
             "name": "[concat(variables('namingInfix'), '-', copyIndex())]",
             "location": "[parameters('location')]",
-            "apiVersion": "[variables('apiVersionCompute')]",
+            "apiVersion": "[variables('computeApiVersion')]",
             "tags": {
                 "displayName": "OpenShiftNodes"
             },
@@ -1232,7 +1227,7 @@
             "type": "Microsoft.Compute/virtualMachines/extensions",
             "name": "[concat(variables('namingInfix'), '-', copyIndex(), '/prepNodes')]",
             "location": "[parameters('location')]",
-            "apiVersion": "[variables('apiVersionCompute')]",
+            "apiVersion": "[variables('computeApiVersion')]",
             "tags": {
                 "displayName": "PrepNodes"
             },
@@ -1254,14 +1249,14 @@
                     ]
                 },
                 "protectedSettings": {
-                    "commandToExecute": "[concat('sh ', variables('nodePrepScriptFileName'), ' ', parameters('cloudAccessUsername'), ' ', parameters('cloudAccessPassword'), ' ', parameters('cloudAccessPoolId'))]"
+                    "commandToExecute": "[variables('commandToExecute2')]"
                 }
             }
         },
         {
             "name": "OpenShiftDeployment",
             "type": "Microsoft.Resources/deployments",
-            "apiVersion": "[variables('apiVersionLinkTemplate')]",
+            "apiVersion": "2015-01-01",
             "dependsOn": [
                 "[concat('Microsoft.Compute/virtualMachines/', parameters('openshiftMasterHostname'), '/extensions/deployOpenShift')]",
                 "nodeScriptLoop"
