@@ -58,17 +58,10 @@
                 "value1": "mssql-redhat"
             }
         },
-        "armBaseUrl": {
-            "type": "string",
-            "defaultValue": "https://raw.githubusercontent.com/sysgain/arm-base/"
-        },
         "baseUrl": {
             "type": "string",
-            "metadata": {
-                "description": "Base URL for Marketplace",
-                "artifactsBaseUrl": ""
-            },
-            "defaultValue": "https://raw.githubusercontent.com/haroldwongms/openshift-enterprise/master"
+            "defaultValue": "https://raw.githubusercontent.com/sysgain/redhat-openshift/master/"
+            
         },
         "masterVmSize": {
             "type": "string",
@@ -184,6 +177,7 @@
         },
         "openshiftMasterHostname": {
             "type": "string",
+            "defaultValue":"openshiftvm",
             "minLength": 1,
             "metadata": {
                 "description": "OpenShift Master hostname"
@@ -192,12 +186,14 @@
         "openshiftMasterPublicIpDnsLabelPrefix": {
             "type": "string",
             "minLength": 1,
+            "defaultValue":"openshiftpip",
             "metadata": {
                 "description": "OpenShift Master VM public IP DNS name. Must be lowercase. It should match with the following regular expression: ^[a-z][a-z0-9-]{1,61}[a-z0-9]$ or it will raise an error."
             }
         },
         "nodeLbPublicIpDnsLabelPrefix": {
             "type": "string",
+            "defaultValue":"usernodepip",
             "minLength": 1,
             "metadata": {
                 "description": "OpenShift Nodes Load Balancer public IP DNS name. Must be lowercase. It should match with the following regular expression: ^[a-z][a-z0-9-]{1,61}[a-z0-9]$ or it will raise an error."
@@ -206,6 +202,7 @@
         "nodePrefix": {
             "type": "string",
             "minLength": 1,
+            "defaultValue":"usernode",
             "metadata": {
                 "description": "OpenShift Node VM prefix"
             }
@@ -232,6 +229,7 @@
         "adminUsername": {
             "type": "string",
             "minLength": 1,
+            "defaultValue":"s",
             "metadata": {
                 "description": "Administrator username on all VMs"
             }
@@ -246,6 +244,7 @@
         "cloudAccessUsername": {
             "type": "string",
             "minLength": 1,
+            "defaultValue":"",
             "metadata": {
                 "description": "Cloud Access Username"
             }
@@ -260,6 +259,7 @@
         "cloudAccessPoolId": {
             "type": "string",
             "minLength": 1,
+            "defaultValue":"",
             "metadata": {
                 "description": "Pool ID with RHEL and OpenShift entitlements"
             }
@@ -286,7 +286,7 @@
         },
         "keyVaultName": {
             "type": "string",
-            "minLength": 1,
+            "minLength": 1,  
             "metadata": {
                 "description": "Name of the Key Vault"
             }
@@ -300,6 +300,7 @@
         },
         "defaultSubDomain": {
             "type": "string",
+            "defaultValue":"defdom",
             "minLength": 1,
             "metadata": {
                 "description": "Default Subdomain for application routing (Wildcard DNS)"
@@ -323,11 +324,11 @@
         "storageAccName": "[concat(parameters('storageAccountName'),uniqueString(resourceGroup().id))]",
         "sqlPublicIPdnsPrefix": "[concat(parameters('sqlPublicIPdnsPrefix'),uniqueString(resourceGroup().id))]",
         "storageAccType": "Standard_LRS",
-        "storageAccountResourceUrl": "[concat(parameters('armBaseUrl'),'staging/storage/storage.json?token=AT3pTezMIHt79xp0tyD9_3-UtdQewCxtks5X5PAzwA%3D%3D')]",
-        "sqlNetworkSecurityGroupResourceUrl": "https://raw.githubusercontent.com/sysgain/redhat-openshift/master/sqlserver/nested/sqlserver-nsg.json",
-        "sqlNetworkInterfacesResourceUrl": "[concat(parameters('armBaseUrl'),'staging/network-interface/network-interface.json?token=AT3pTep_XdJObVnePA2vUcfXKBb_M5ciks5X5QKAwA%3D%3D')]",
-        "sqlVirtualMachineResourceUrl": "[concat(parameters('armBaseUrl'),'staging/virtual-machine/vm-withoutplan-with-1disk.json?token=AT3pTQih33ViOJoARuCEoz9wEEnpSkMOks5X5Q63wA%3D%3D')]",
-        "sqlPublicIPResourceUrl": "[concat(parameters('armBaseUrl'),'staging/public-ip/public-ip.json?token=AT3pTTHPK6WMMjUL-_9lrUXDtSk_mvLqks5X5PkGwA%3D%3D')]",
+        "storageAccountResourceUrl": "[concat(parameters('baseUrl'),'sqlserver/nested/sqlserver-storage.json')]",
+        "sqlNetworkSecurityGroupResourceUrl": "[concat(parameters('baseUrl'),'sqlserver/nested/sqlserver-nsg.json')]",
+        "sqlNetworkInterfacesResourceUrl": "[concat(parameters('baseUrl'),'sqlserver/nested/sqlserver-nic.json')]",
+        "sqlVirtualMachineResourceUrl": "[concat(parameters('baseUrl'),'sqlserver/nested/sqlserver-vm.json')]",
+        "sqlPublicIPResourceUrl": "[concat(parameters('baseUrl'),'sqlserver/nested/sqlserver-publicip.json')]",
         "storageApiVersion": "2015-06-15",
         "networkApiVersion": "2015-06-15",
         "computeApiVersion": "2015-06-15",
@@ -370,11 +371,11 @@
         },
         "imageReference": "[variables('osType')]",
         "sshKeyPath": "[concat('/home/', parameters('adminUsername'), '/.ssh/authorized_keys')]",
-        "nodePrepScriptUrl": "[concat(parameters('baseUrl'), '/nodePrep.sh')]",
-        "masterPrepScriptUrl": "[concat(parameters('baseUrl'), '/masterPrep.sh')]",
+        "nodePrepScriptUrl": "https://raw.githubusercontent.com/sysgain/redhat-openshift/master/redhat/scripts/nodePrep.sh",
+        "masterPrepScriptUrl": "https://raw.githubusercontent.com/sysgain/redhat-openshift/master/redhat/scripts/masterPrep.sh",
         "nodePrepScriptFileName": "nodePrep.sh",
         "masterPrepScriptFileName": "masterPrep.sh",
-        "openshiftDeploymentTemplateUrl": "[concat(parameters('baseUrl'), '/openshiftdeploy.json')]",
+        "openshiftDeploymentTemplateUrl": "https://raw.githubusercontent.com/sysgain/redhat-openshift/master/redhat/nested/openshiftdeploy.json",
         "vmSizesMap": {
             "Standard_A4": {
                 "storageAccountType": "Standard_LRS"
