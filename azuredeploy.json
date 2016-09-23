@@ -297,7 +297,7 @@
         },
         "defaultSubDomain": {
             "type": "string",
-            "defaultValue": "defdom",
+            "defaultValue": "",
             "minLength": 1,
             "metadata": {
                 "description": "Default Subdomain for application routing (Wildcard DNS)"
