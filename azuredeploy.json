@@ -366,11 +366,11 @@
         },
         "imageReference": "[variables('osType')]",
         "sshKeyPath": "[concat('/home/', parameters('adminUsername'), '/.ssh/authorized_keys')]",
-        "nodePrepScriptUrl": "https://raw.githubusercontent.com/sysgain/redhat-openshift/master/redhat/scripts/nodePrep.sh",
-        "masterPrepScriptUrl": "https://raw.githubusercontent.com/sysgain/redhat-openshift/master/redhat/scripts/masterPrep.sh",
+        "nodePrepScriptUrl": "[concat(parameters('baseUrl'),'redhat/scripts/nodePrep.sh')]",
+        "masterPrepScriptUrl": "[concat(parameters('baseUrl'),'redhat/scripts/masterPrep.sh')]",
         "nodePrepScriptFileName": "nodePrep.sh",
         "masterPrepScriptFileName": "masterPrep.sh",
-        "openshiftDeploymentTemplateUrl": "https://raw.githubusercontent.com/sysgain/redhat-openshift/master/redhat/nested/openshiftdeploy.json",
+        "openshiftDeploymentTemplateUrl": "[concat(parameters('baseUrl'),'redhat/nested/openshiftdeploy.json')]",
         "vmSizesMap": {
             "Standard_A4": {
                 "storageAccountType": "Standard_LRS"
